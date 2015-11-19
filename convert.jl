@@ -21,8 +21,17 @@ convertToInt("koks")
 
 # TO:DO Comment it!
 
-# function convertToText(intResult::Int, lengthOfTextBlock::Int)
+function convertToText(intResult::Int, lengthOfTextBlock::Int)
 
-# TO:DO 
+    result = Char[]
+    tmp = intResult
+    for i = 1:lengthOfTextBlock
+        intResult = tmp % 256
+        tmp = div(tmp,256)
+        nic = Char(intResult)
+        push!(result,nic)
+    end
+    return UTF8String(result)
+end
 
-# end
+convertToText(1936420715,4)
