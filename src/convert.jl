@@ -21,7 +21,7 @@ convertToInt("koks")
 
 # TO:DO Comment it!
 
-function convertToText(intResult::Int, lengthOfTextBlock::Int)
+function convertToText(intResult::Integer, lengthOfTextBlock::Integer)
 
     result = Char[]
     tmp = intResult
