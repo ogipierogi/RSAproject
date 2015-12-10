@@ -1,0 +1,2 @@
+All indexing in Julia is 1-based: the first element of any integer-indexed object is found at index 1, and the last element is found at index n, when the string has a length of n.
+In any indexing expression, the keyword end can be used as a shorthand for the last index (computed by endof(str)). You can perform arithmetic and other operations with end, just like a normal value:
