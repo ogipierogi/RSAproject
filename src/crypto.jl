@@ -113,15 +113,15 @@ function determineK(n::Integer)
 end
 
 function encrypt()
-    generateKeys("/Users/i321387/julia/src/n.txt", "/Users/i321387/julia/src/e.txt", "/Users/i321387/julia/src/d.txt")
+    generateKeys("/Users/i321387/RSAproject/src/n.txt", "/Users/i321387/RSAproject/src/e.txt", "/Users/i321387/RSAproject/src/d.txt")
 
-    n=parse(BigInt,readKeyFromFile("/Users/i321387/julia/src/n.txt"))
-    e=parse(BigInt,readKeyFromFile("/Users/i321387/julia/src/e.txt"))
+    n=parse(BigInt,readKeyFromFile("/Users/i321387/RSAproject/src/n.txt"))
+    e=parse(BigInt,readKeyFromFile("/Users/i321387/RSAproject/src/e.txt"))
     
     l=determineL(n)
     k=determineK(n)
 
-    plain = readPlainText("/Users/i321387/julia/src/testowy.txt")
+    plain = readPlainText("/Users/i321387/RSAproject/src/testowy.txt")
     cipher = ""
 
     size = sizeof(plain)
@@ -138,8 +138,8 @@ end
 encrypt()
 
 #function decrypt()
-    #n=readKeyFromFile("/Users/i321387/julia/src/n.txt")
-    #d=readKeyFromFile("/Users/i321387/julia/src/d.txt")
+    #n=readKeyFromFile("/Users/i321387/RSAproject/src/n.txt")
+    #d=readKeyFromFile("/Users/i321387/RSAproject/src/d.txt")
     
     #l=determineL(n)
     #k=determineK(n)
