@@ -112,7 +112,7 @@ function determineK(n::Integer)
     return k
 end
 
-function encrypt()
+function encryptDecrypt()
     generateKeys("/Users/i321387/RSAproject/src/n.txt", "/Users/i321387/RSAproject/src/e.txt", "/Users/i321387/RSAproject/src/d.txt")
 
     n=parse(BigInt,readKeyFromFile("/Users/i321387/RSAproject/src/n.txt"))
@@ -126,16 +126,23 @@ function encrypt()
 
     size = sizeof(plain)
     plainToEncrypt = ""
+    encrypted = ""
     
-    for i = 1:size
-         if k + i > size
-            k = size - i
+    # encrypt/decrypt
+
+    for i = 1:k:size
+       ifNull = ((i+k)-1)
+       if ifNull < size
+          intRepresent = convertToInt(plain[i:ifNull]) 
+          encrypted = powermod(intRepresent, e, n)
+          encryptedAsText = convertToText(encrypted, l)
+          println(encryptedAsText)
+          #println(convertToInt(encryptedAsText))
         end
-    println(plain[i:k])
-    end    
+    end
 end
 
-encrypt()
+encryptDecrypt()
 
 #function decrypt()
     #n=readKeyFromFile("/Users/i321387/RSAproject/src/n.txt")
