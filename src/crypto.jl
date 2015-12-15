@@ -79,8 +79,8 @@ function readPlainText(path::AbstractString)
 end
 
 function generateKeys(nPath::AbstractString, ePath::AbstractString, dPath::AbstractString)
-    p=BigInt(generateRandomPrime(25555555555556788888863786434738642364746872687))
-    q=BigInt(generateRandomPrime(25555555555556788888867347864873246723648736484))
+    p=generateRandomPrime(25555555555556788888863786434738642364746872687)
+    q=generateRandomPrime(25555555555556788888867347864873246723648736484)
     n=p*q
     fi=(p-1)*(q-1)
 
@@ -148,12 +148,12 @@ l=determineL(n)
 	  encryptedAsInt = powermod(intRepresent, e, n)
 	  #println(encryptedAsInt)
 	  	  
-	  encryptedAsText = convertToText(encryptedAsInt, k+1)
+	  encryptedAsText = convertToText(encryptedAsInt, l)
 	  #println(encryptedAsText)
 
 	  cipherChar = cipherChar * encryptedAsText
 	  decryptedAsInt = powermod(encryptedAsInt, d, n)
-	  decryptedAsText = convertToText(decryptedAsInt, k+1)
+	  decryptedAsText = convertToText(decryptedAsInt, l)
 	  encipherChar = encipherChar * decryptedAsText
         end
     end
