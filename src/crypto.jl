@@ -42,7 +42,7 @@ function convertToText(intResult::Integer, lengthOfTextBlock::Integer)
         nic = Char(intResult)
 	push!(result,nic)
     end
-    return UTF8String(result)
+    return AbstractString(result)
 end
 
 convertToText(1936420715,4)
@@ -60,30 +60,60 @@ end
 
 generateRandomPrime(676386763728328772883712873871872632781387637831782378237237187)
 
-function writeKeyToFile(path::AbstractString, what::Any)
+function writeToFile(path::AbstractString, what::Any)
     outputFile = open(path, "w")
-    write(outputFile, what)
-    close(outputFile)
+    try
+    	write(outputFile, what)
+    finally
+    	close(outputFile)
+    end
 end
 
 function readKeyFromFile(path::AbstractString)
     inputFile = open(path)
-    key = readline(inputFile)
-    close(inputFile)
+    key = ""
+    try
+    	key = readline(inputFile)
+    finally
+    	close(inputFile)
+    end
+
     return key
 end
 
-function readPlainText(path::AbstractString)
-    plain = readall(path)
+function readCipherFromFile(path::AbstractString)
+    
+    encryptedInts = []
+
+    inputFile = open(path, "r")
+    try
+        for line in eachline(inputFile)
+           push!(encryptedInts, line)
+        end
+    finally
+        close(inputFile)
+    end
+    return encryptedInts
+
+end
+
+function readText(path::AbstractString)
+    inputFile = open(path)
+    plain = ""
+    try
+    	plain = readall(inputFile)
+    finally
+        close(inputFile)
+    end
+    
     return plain
 end
 
-function generateKeys(nPath::AbstractString, ePath::AbstractString, dPath::AbstractString)
-    p=generateRandomPrime(25555555555556788888863786434738642364746872687)
-    q=generateRandomPrime(25555555555556788888867347864873246723648736484)
+function generateKeys(nPath::AbstractString, ePath::AbstractString, dPath::AbstractString, whichRangeOfp::Integer, whichRangeOfq::Integer)
+    p=generateRandomPrime(whichRangeOfp)
+    q=generateRandomPrime(whichRangeOfq)
     n=p*q
     fi=(p-1)*(q-1)
-
     e=rand(1:fi)
     
     while gcd(e,fi) != 1
@@ -91,11 +121,9 @@ function generateKeys(nPath::AbstractString, ePath::AbstractString, dPath::Abstr
     end
     
     d=invmod(e,fi)
-    println(d)    
-    println(e * d % fi)
-    writeKeyToFile(nPath,join(n)) # n and e is public key
-    writeKeyToFile(ePath,join(e)) # n and d is private key
-    writeKeyToFile(dPath,join(d))
+    writeToFile(nPath,join(n)) # n and e is public key
+    writeToFile(ePath,join(e)) # n and d is private key
+    writeToFile(dPath,join(d))
 end
 
 function determineL(n::Integer)
@@ -117,51 +145,74 @@ function determineK(n::Integer)
     return k
 end
 
-function encryptDecrypt()
-    generateKeys("/Users/i321387/RSAproject/src/n.txt", "/Users/i321387/RSAproject/src/e.txt", "/Users/i321387/RSAproject/src/d.txt")
+function encrypt(plainPath::AbstractString,nPath::AbstractString, ePath::AbstractString, dPath::AbstractString, cipherPath::AbstractString, whichRangeOfp::Integer, whichRangeOfq::Integer)
+    generateKeys(nPath,ePath,dPath, whichRangeOfp, whichRangeOfq)
 
-    n=parse(BigInt,readKeyFromFile("/Users/i321387/RSAproject/src/n.txt"))
-    e=parse(BigInt,readKeyFromFile("/Users/i321387/RSAproject/src/e.txt"))
-    d=parse(BigInt,readKeyFromFile("/Users/i321387/RSAproject/src/d.txt"))
+    n=parse(BigInt,readKeyFromFile(nPath))
+    e=parse(BigInt,readKeyFromFile(ePath))
+    d=parse(BigInt,readKeyFromFile(dPath))
 
-l=determineL(n)
+    l=determineL(n)
     k=determineK(n)
 
-    plain = readPlainText("/Users/i321387/RSAproject/src/testowy.txt")
-    cipher = ""
+    plain = readText(plainPath)
+
+    println("Plain text is: ")    
+    println(plain)
 
     size = sizeof(plain)
-    plainToEncrypt = ""
-    decrypted = ""
     
-    cipherChar = ""
-    encipherChar = ""
+    cipherText = ""
+    encipherText = ""
+    
     # encrypt/decrypt
-    println(k)
-    println(l)
-
+    
+    encryptedInts = Integer[]
+    
     for i = 1:k:size
 	  ifNull = ((i+k)-1)
        if ifNull < size
           intRepresent = convertToInt(string(plain[i:ifNull])) 
-          #println(intRepresent)
 	  encryptedAsInt = powermod(intRepresent, e, n)
-	  #println(encryptedAsInt)
-	  	  
 	  encryptedAsText = convertToText(encryptedAsInt, l)
-	  #println(encryptedAsText)
+          
+          push!(encryptedInts, BigInt(encryptedAsInt))
 
-	  cipherChar = cipherChar * encryptedAsText
-	  decryptedAsInt = powermod(encryptedAsInt, d, n)
-	  decryptedAsText = convertToText(decryptedAsInt, l)
-	  encipherChar = encipherChar * decryptedAsText
+	  cipherText = cipherText * encryptedAsText
         end
     end
-    println("cipher")
-    println(cipherChar)
-    println("encipher")
-    println(encipherChar)
+
+    writedlm(cipherPath, encryptedInts)
+
+    println("Encrypted text is: ")
+    println(cipherText)   
 end
 
-encryptDecrypt()
+encrypt("/Users/i321387/RSAproject/src/testowy.txt", "/Users/i321387/RSAproject/src/n.txt", "/Users/i321387/RSAproject/src/e.txt", "/Users/i321387/RSAproject/src/d.txt", "/Users/i321387/RSAproject/src/cipherInts.txt", 25555555555556788888863432434342344234234242423423999, 25555555555556788888863432434342344234234242423423423)
 
+function decrypt(cipherPath::AbstractString, decipherPath::AbstractString, nPath::AbstractString, dPath::AbstractString)
+
+    n=parse(BigInt,readKeyFromFile(nPath))
+    d=parse(BigInt,readKeyFromFile(dPath))
+
+    l=determineL(n)
+    k=determineK(n)
+    
+    encryptedInts = readCipherFromFile(cipherPath)
+    
+    decipherText = ""
+
+    for i = 1:length(encryptedInts)
+       encryptedAsInt = parse(BigInt, encryptedInts[i])
+       decryptedAsInt = powermod(encryptedAsInt, d, n)
+       decryptedAsText = convertToText(decryptedAsInt, l)
+       decipherText = decipherText * decryptedAsText
+    end
+    
+    writeToFile(decipherPath, decipherText)
+
+    println("Decrypted text is: ")
+    println(decipherText)
+end
+
+decrypt("/Users/i321387/RSAproject/src/cipherInts.txt", "/Users/i321387/RSAproject/src/decipher.txt",  "/Users/i321387/RSAproject/src/n.txt", "/Users/i321387/RSAproject/src/d.txt")
