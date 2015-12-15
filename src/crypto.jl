@@ -40,7 +40,7 @@ function convertToText(intResult::Integer, lengthOfTextBlock::Integer)
         intResult = tmp % 256
         tmp = div(tmp,256)
         nic = Char(intResult)
-        push!(result,nic)
+	push!(result,nic)
     end
     return UTF8String(result)
 end
@@ -79,17 +79,20 @@ function readPlainText(path::AbstractString)
 end
 
 function generateKeys(nPath::AbstractString, ePath::AbstractString, dPath::AbstractString)
-    p=generateRandomPrime(3322121212121)
-    q=generateRandomPrime(212121212212)
+    p=BigInt(generateRandomPrime(25555555555556788888863786434738642364746872687))
+    q=BigInt(generateRandomPrime(25555555555556788888867347864873246723648736484))
     n=p*q
     fi=(p-1)*(q-1)
-    e=generateRandomPrime(fi)
 
+    e=rand(1:fi)
+    
     while gcd(e,fi) != 1
-        e=generateRandomPrime(fi)
+	e=rand(1:fi)
     end
-
-    d=invmod(e,n)
+    
+    d=invmod(e,fi)
+    println(d)    
+    println(e * d % fi)
     writeKeyToFile(nPath,join(n)) # n and e is public key
     writeKeyToFile(ePath,join(e)) # n and d is private key
     writeKeyToFile(dPath,join(d))
@@ -106,7 +109,7 @@ function determineL(n::Integer)
             end
             l+=1
         end
-        return l
+        return l-1
 end
 
 function determineK(n::Integer)
@@ -121,7 +124,7 @@ function encryptDecrypt()
     e=parse(BigInt,readKeyFromFile("/Users/i321387/RSAproject/src/e.txt"))
     d=parse(BigInt,readKeyFromFile("/Users/i321387/RSAproject/src/d.txt"))
 
-    l=determineL(n)
+l=determineL(n)
     k=determineK(n)
 
     plain = readPlainText("/Users/i321387/RSAproject/src/testowy.txt")
@@ -129,53 +132,36 @@ function encryptDecrypt()
 
     size = sizeof(plain)
     plainToEncrypt = ""
-    encrypted = ""
+    decrypted = ""
     
     cipherChar = ""
+    encipherChar = ""
     # encrypt/decrypt
+    println(k)
+    println(l)
 
     for i = 1:k:size
-       ifNull = ((i+k)-1)
+	  ifNull = ((i+k)-1)
        if ifNull < size
-          intRepresent = convertToInt(plain[i:ifNull]) 
-          println(intRepresent)
+          intRepresent = convertToInt(string(plain[i:ifNull])) 
+          #println(intRepresent)
 	  encryptedAsInt = powermod(intRepresent, e, n)
-	  println(encryptedAsInt)
-	  encryptedAsText = convertToText(encryptedAsInt, l)
+	  #println(encryptedAsInt)
+	  	  
+	  encryptedAsText = convertToText(encryptedAsInt, k+1)
+	  #println(encryptedAsText)
+
 	  cipherChar = cipherChar * encryptedAsText
+	  decryptedAsInt = powermod(encryptedAsInt, d, n)
+	  decryptedAsText = convertToText(decryptedAsInt, k+1)
+	  encipherChar = encipherChar * decryptedAsText
         end
     end
-    return cipherChar
-end
-
-#encryptDecrypt()
-
-function decrypt()
-    cipher = encryptDecrypt()
-
-    println(cipher)
-    
-    n=parse(BigInt,readKeyFromFile("/Users/i321387/RSAproject/src/n.txt"))
-    d=parse(BigInt,readKeyFromFile("/Users/i321387/RSAproject/src/d.txt"))
-    
-    l=determineL(n)
-    k=determineK(n)
-    size = sizeof(cipher)
-
-    cipherChar = ""
-
-    for i = 1:l:size
-       ifNull = ((i+l)-1)
-       if ifNull < size
-          intRepresent = convertToInt(cipher[i:ifNull])
-          println(intRepresent)
-          encryptedAsInt = powermod(intRepresent, d, n)
-          println(encryptedAsInt)
-          encryptedAsText = convertToText(encryptedAsInt, k)
-          cipherChar = cipherChar * encryptedAsText
-        end
-    end
+    println("cipher")
     println(cipherChar)
+    println("encipher")
+    println(encipherChar)
 end
 
-decrypt()
+encryptDecrypt()
+
