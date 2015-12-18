@@ -1,4 +1,4 @@
-# Rsa
+# Rsa library
 This repository contains simple implementation of RSA algorithm. You can encrypt/decrypt files with your parameters. The library has been written for educational purposes. If you want to use RSA encryption in commercial software, or in your company, you should use proven implementations of RSA.
 
 # List of functions
