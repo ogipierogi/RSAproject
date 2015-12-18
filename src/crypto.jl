@@ -8,7 +8,7 @@
 
 function power(number::Integer, power::Integer)
     result = 1
-    for i = 1:(power-1)
+    for i = 0:(power-1)
         result = BigInt(result*number)
     end
     return result
@@ -27,8 +27,6 @@ function convertToInt(textBlock::AbstractString)
     end
     return intResult
 end
-convertToInt("koks")
-
 
 # function reverse to convertToInt
 
@@ -36,16 +34,15 @@ function convertToText(intResult::Integer, lengthOfTextBlock::Integer)
 
     result = Char[]
     tmp = intResult
-    for i = 1:lengthOfTextBlock
+    for i = 1:lengthOfTextBlock+1
         intResult = tmp % 256
         tmp = div(tmp,256)
         nic = Char(intResult)
 	push!(result,nic)
     end
-    return AbstractString(result)
+    text = AbstractString(result)
+    return text[2:lengthOfTextBlock+1]
 end
-
-convertToText(1936420715,4)
 
 # gen random prime
 
@@ -97,7 +94,7 @@ function readCipherFromFile(path::AbstractString)
 
 end
 
-function readText(path::AbstractString)
+function readPlainFromFile(path::AbstractString)
     inputFile = open(path)
     plain = ""
     try
@@ -155,7 +152,7 @@ function encrypt(plainPath::AbstractString,nPath::AbstractString, ePath::Abstrac
     l=determineL(n)
     k=determineK(n)
 
-    plain = readText(plainPath)
+    plain = readPlainFromFile(plainPath)
 
     println("Plain text is: ")    
     println(plain)
