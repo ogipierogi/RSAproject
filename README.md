@@ -19,4 +19,13 @@ This repository contains simple implementation of RSA algorithm. You can encrypt
 
 > - **function writeToFile**(path::**AbstractString**, what::**Any**)
 
+> - **function generateKeys**(nPath::**AbstractString**, ePath::**AbstractString**, dPath::**AbstractString**, whichRangeOfp::**Integer**, whichRangeOfq::**Integer**)
+
+> - **function determineL**(n::**Integer**)
+
+> - **function determineK**(n::**Integer**)
+
+> - **function encrypt**(plainPath::**AbstractString**,nPath::**AbstractString**, ePath::**AbstractString**, dPath::**AbstractString**, cipherPath::**AbstractString**, whichRangeOfp::**Integer**, whichRangeOfq::**Integer**)
+
+> - **function decrypt**(cipherPath::**AbstractString**, decipherPath::**AbstractString**, nPath::**AbstractString**, dPath::**AbstractString**)
 
