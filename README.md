@@ -11,6 +11,10 @@ This repository contains simple implementation of RSA algorithm. You can encrypt
 
 > - **function generateRandomPrime**(range::**Integer**) - is used to generation random primes. Pass one integer as argument, which define the end of the range from which the prime is generated. Return prime number.
 
+> - **function determineL**(n::**Integer**)
+
+> - **function determineK**(n::**Integer**)
+
 > - **function readKeyFromFile**(path::**AbstractString**)
 
 > - **function readCipherFromFile**(path::**AbstractString**)
@@ -20,10 +24,6 @@ This repository contains simple implementation of RSA algorithm. You can encrypt
 > - **function writeToFile**(path::**AbstractString**, what::**Any**)
 
 > - **function generateKeys**(nPath::**AbstractString**, ePath::**AbstractString**, dPath::**AbstractString**, whichRangeOfp::**Integer**, whichRangeOfq::**Integer**)
-
-> - **function determineL**(n::**Integer**)
-
-> - **function determineK**(n::**Integer**)
 
 > - **function encrypt**(plainPath::**AbstractString**,nPath::**AbstractString**, ePath::**AbstractString**, dPath::**AbstractString**, cipherPath::**AbstractString**, whichRangeOfp::**Integer**, whichRangeOfq::**Integer**)
 
