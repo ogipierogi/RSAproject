@@ -13,10 +13,10 @@ function power(number::Integer, power::Integer)
     end
     return result
 end
+
 power(256,9)
 
 function convertToInt(textBlock::AbstractString)
-
     convertStringToCharArray = collect(textBlock)
     
     intResult = 0
@@ -29,30 +29,26 @@ function convertToInt(textBlock::AbstractString)
 end
 
 # function reverse to convertToInt
-
 function convertToText(intResult::Integer, lengthOfTextBlock::Integer)
-
     result = Char[]
     tmp = intResult
     for i = 1:lengthOfTextBlock+1
         intResult = tmp % 256
         tmp = div(tmp,256)
-        nic = Char(intResult)
-	push!(result,nic)
+        charResult = Char(intResult)
+	push!(result,charResult)
     end
     text = AbstractString(result)
     return text[2:lengthOfTextBlock+1]
 end
 
 # gen random prime
-
 function generateRandomPrime(range::Integer)
     prime = 0
     while isprime(prime) != true
         prime = rand(1:range)
     end
     return prime
-
 end
 
 generateRandomPrime(676386763728328772883712873871872632781387637831782378237237187)
@@ -79,7 +75,6 @@ function readKeyFromFile(path::AbstractString)
 end
 
 function readCipherFromFile(path::AbstractString)
-    
     encryptedInts = []
 
     inputFile = open(path, "r")
@@ -91,7 +86,6 @@ function readCipherFromFile(path::AbstractString)
         close(inputFile)
     end
     return encryptedInts
-
 end
 
 function readPlainFromFile(path::AbstractString)
@@ -188,7 +182,6 @@ end
 encrypt("/Users/i321387/RSAproject/src/testowy.txt", "/Users/i321387/RSAproject/src/n.txt", "/Users/i321387/RSAproject/src/e.txt", "/Users/i321387/RSAproject/src/d.txt", "/Users/i321387/RSAproject/src/cipherInts.txt", 25555555555556788888863432434342344234234242423423999, 25555555555556788888863432434342344234234242423423423)
 
 function decrypt(cipherPath::AbstractString, decipherPath::AbstractString, nPath::AbstractString, dPath::AbstractString)
-
     n=parse(BigInt,readKeyFromFile(nPath))
     d=parse(BigInt,readKeyFromFile(dPath))
 
